@@ -26,24 +26,15 @@ fn projects_table() {
 
 	// Count the number of active timers
 	for project in projects {
-		let active_timers = match &project.timers {
-			Some(timers) => {
-				let mut active_timer_count = 0;
-				for timer in timers {
-					if timer.active {
-						active_timer_count += 1;
-					}
-				}
-				Some(active_timer_count)
-			}
-			None => Some(0),
-		};
+		let active_timers = project.timers.as_ref()
+			.map(|timers| timers.iter().filter(|timer| timer.active).count())
+			.unwrap_or(0);
 
 		builder.push_record([
 			project.id.to_string(),
 			project.name,
 			project.description.unwrap_or(String::from("")),
-			active_timers.unwrap_or(0).to_string(),
+			active_timers.to_string(),
 		]);
 	}
 
