@@ -16,7 +16,7 @@ pub fn fetch_projects() -> Vec<Project> {
 		id: 1,
 		name: String::from("Project 1"),
 		description: Some(String::from("This is the first project")),
-		timers: Some(fetch_timers(1))
+		timers: Some(fetch_timers(Some(1)))
 	});
 
 	projects.push(Project {

@@ -14,7 +14,9 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
 	/// projects | timers
-	Ls(List)
+	Ls(List),
+	/// Timer status
+	Status(Status)
 }
 
 #[derive(Args)]
@@ -22,6 +24,13 @@ struct List {
 	/// projects | timers
 	#[command(subcommand)]
 	list_type: Option<ListType>,
+}
+
+#[derive(Args)]
+struct Status {
+	/// Timer status
+	#[command(subcommand)]
+	status_type: Option<StatusType>,
 }
 
 #[derive(Subcommand, Debug)]
@@ -32,7 +41,13 @@ pub enum ListType {
 	Timers,
 }
 
-// #[arg(short = 'd', long = "digits")]
+#[derive(Subcommand, Debug)]
+pub enum StatusType {
+	#[command(short_flag = 'a', about = "Active timers")]
+	Active,
+	#[command(short_flag = 'z', about = "All timers")]
+	All,
+}
 
 pub fn run () {
 	let cli = Cli::parse();
@@ -44,7 +59,17 @@ pub fn run () {
 					list::list(_name);
 				}
 				None => {
-					println!("Please specificy: projects | timers");
+					println!("Please specify: projects | timers");
+				}
+			}
+		}
+		Some(Commands::Status(name)) => {
+			match name.status_type {
+				Some(ref _name) => {
+					status::status(_name);
+				}
+				None => {
+					println!("Please specify: all | active");
 				}
 			}
 		}

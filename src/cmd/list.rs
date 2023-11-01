@@ -3,6 +3,7 @@ use tabled::{
 	settings::Style,
 	settings::Padding,
 };
+use owo_colors::OwoColorize;
 
 use crate::cmd::main::ListType;
 use crate::core;
@@ -32,9 +33,9 @@ fn projects_table() {
 
 		builder.push_record([
 			project.id.to_string(),
-			project.name,
+			project.name.green().to_string(),
 			project.description.unwrap_or(String::from("")),
-			active_timers.to_string(),
+			active_timers.bright_red().to_string(),
 		]);
 	}
 
