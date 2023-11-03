@@ -16,7 +16,9 @@ enum Commands {
 	/// projects | timers
 	Ls(List),
 	/// Timer status
-	Status(Status)
+	Status(Status),
+	// View project | timer details
+	View(View),
 }
 
 #[derive(Args)]
@@ -24,13 +26,6 @@ struct List {
 	/// projects | timers
 	#[command(subcommand)]
 	list_type: Option<ListType>,
-}
-
-#[derive(Args)]
-struct Status {
-	/// Timer status
-	#[command(subcommand)]
-	status_type: Option<StatusType>,
 }
 
 #[derive(Subcommand, Debug)]
@@ -41,12 +36,34 @@ pub enum ListType {
 	Timers,
 }
 
+#[derive(Args)]
+struct Status {
+	/// Timer status
+	#[command(subcommand)]
+	status_type: Option<StatusType>,
+}
+
 #[derive(Subcommand, Debug)]
 pub enum StatusType {
 	#[command(short_flag = 'a', about = "Active timers")]
 	Active,
 	#[command(short_flag = 'z', about = "All timers")]
 	All,
+}
+
+#[derive(Args)]
+struct View {
+	/// View project | timer details
+	#[command(subcommand)]
+	view_type: Option<ViewType>,
+}
+
+#[derive(Subcommand, Debug)]
+pub enum ViewType {
+	#[command(short_flag = 'p', about = "Project details")]
+	Project,
+	#[command(short_flag = 'z', about = "Timer details")]
+	Timer,
 }
 
 pub fn run () {
@@ -70,6 +87,16 @@ pub fn run () {
 				}
 				None => {
 					println!("Please specify: all | active");
+				}
+			}
+		}
+		Some(Commands::View(name)) => {
+			match name.view_type {
+				Some(ref _name) => {
+					view::view(_name);
+				}
+				None => {
+					println!("Please specify: project | timer");
 				}
 			}
 		}

@@ -4,7 +4,6 @@ use tabled::{
 	settings::Padding,
 };
 use owo_colors::OwoColorize;
-use chrono::*;
 
 use crate::cmd::main::StatusType;
 use crate::core;
