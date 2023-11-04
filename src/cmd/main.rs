@@ -19,6 +19,8 @@ enum Commands {
 	Status(Status),
 	// View project | timer details
 	View(View),
+	// Create a project | timer
+	Add(Add),
 }
 
 #[derive(Args)]
@@ -66,6 +68,24 @@ pub enum ViewType {
 	Timer,
 }
 
+#[derive(Args)]
+struct Add {
+	/// Add project | timer
+	#[command(subcommand)]
+	add_type: Option<AddType>,
+}
+
+#[derive(Subcommand, Debug)]
+pub enum AddType {
+	#[command(short_flag = 'p', about = "Project")]
+	Project {
+		#[arg(action)]
+		id: i32,
+	},
+	#[command(short_flag = 't', about = "Timer")]
+	Timer,
+}
+
 pub fn run () {
 	let cli = Cli::parse();
 
@@ -94,6 +114,16 @@ pub fn run () {
 			match name.view_type {
 				Some(ref _name) => {
 					view::view(_name);
+				}
+				None => {
+					println!("Please specify: project | timer");
+				}
+			}
+		}
+		Some(Commands::Add(name)) => {
+			match name.add_type {
+				Some(ref _name) => {
+					add::add(_name);
 				}
 				None => {
 					println!("Please specify: project | timer");
